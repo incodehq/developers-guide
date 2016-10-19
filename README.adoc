@@ -94,7 +94,7 @@ package "github/estatio" {
 
 === Estatio (Open Source) Modules
 
-The modules that currently make up Estatio can be found https://raw.githubusercontent.com/incodehq/developers-guide/master/images/estatio-modules.png[in this diagram], rendered from the following PlantUML source (via asciidoctor-diagram):
+The modules that currently make up Estatio can be found https://raw.githubusercontent.com/incodehq/developers-guide/master/images/estatio-and-modules.png[in this diagram], rendered from the following PlantUML source (via asciidoctor-diagram):
 
 [plantuml, {_imagesdir}/estatio-and-modules, png]
 ....
@@ -130,12 +130,7 @@ package "github/estatio" {
         [udo-event] --> [udo-base]
         [udo-settings] --> [udo-base]
 
-
-        [udo-communication] --> [udo-apptenancy]
         [udo-communication] --> [udo-country]
-
-        [udo-charge] --> [udo-apptenancy]
-        [udo-partyagreement] --> [udo-apptenancy]
     }
 
     [estatio-dom] --> [udo-charge]
