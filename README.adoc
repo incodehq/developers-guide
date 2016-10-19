@@ -13,7 +13,7 @@ Download https://github.com/incodehq/developers-guide/blob/master/pdf/developers
 Incode applications (most notably Estatio) consists of multiple modules, deployed as a single WAR (a "modular monolith").
 These modules are layered as follows:
 
-image::https://raw.githubusercontent.com/estatio/estatio/master/docs/images/modules.png[]
+image::https://raw.githubusercontent.com/incodehq/developers-guide/master/pptx/modules.png[]
 
 At the bottom is http://isis.apache.org[Apache Isis] framework.
 The (Estatio) application and modules depend on the framework in that its domain objects are annotated with Apache Isis and DataNucleus annotations, and use domain services provided by Apache Isis (such as `RepositoryService` and `TitleService`).
