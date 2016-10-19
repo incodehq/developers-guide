@@ -4,7 +4,7 @@ This guide is intended for the developers of Estatio (and other applications).
 
 :_imagesdir: images/
 
-Download https://raw.githubusercontent.com/incodehq/developers-guide/pdf/developers-guide.png[PDF]
+Download https://github.com/incodehq/developers-guide/blob/master/pdf/developers-guide.pdf[PDF]
 
 
 
