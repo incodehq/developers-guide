@@ -48,7 +48,7 @@ For Estatio as deployed as ECP, there is also a separate deployment which has a 
 
 Estatio (as deployed as ECP) consists of http://github.com/estatio/estatio[Estatio (open source)] along with a private repo (hosted in bitbucket) containing ECP-specific integration with CMS, General Ledger and stuff.
 
-The modules that currently make up Estatio (ECP) are shown  link::https://raw.githubusercontent.com/incodehq/developers-guide/master/images/estatio-ecp.png[in this diagram], rendered from this PlantUML source (via asciidoctor-diagram):
+The modules that currently make up Estatio (ECP) are shown  https://raw.githubusercontent.com/incodehq/developers-guide/master/images/estatio-ecp.png[in this diagram], rendered from this PlantUML source (via asciidoctor-diagram):
 
 
 [plantuml, {_imagesdir}/estatio-ecp, png]
@@ -94,7 +94,7 @@ package "github/estatio" {
 
 === Estatio (Open Source) Modules
 
-The modules that currently make up Estatio can be found link::https://raw.githubusercontent.com/incodehq/developers-guide/master/images/estatio-modules.png[in this diagram], rendered from the following PlantUML source (via asciidoctor-diagram):
+The modules that currently make up Estatio can be found https://raw.githubusercontent.com/incodehq/developers-guide/master/images/estatio-modules.png[in this diagram], rendered from the following PlantUML source (via asciidoctor-diagram):
 
 [plantuml, {_imagesdir}/estatio-and-modules, png]
 ....
@@ -169,7 +169,7 @@ package "incode-modules" {
 
 === Incode Modules / IsisAddons
 
-The modules that make up Incode Catalog and the Isis Addons can be found link::https://raw.githubusercontent.com/incodehq/developers-guide/master/images/incode-and-isisaddons.png[in this diagram], rendered from the following PlantUML source (via asciidoctor-diagram):
+The modules that make up Incode Catalog and the Isis Addons can be found https://raw.githubusercontent.com/incodehq/developers-guide/master/images/incode-and-isisaddons.png[in this diagram], rendered from the following PlantUML source (via asciidoctor-diagram):
 
 [plantuml, {_imagesdir}/incode-and-isisaddons, png]
 ....
