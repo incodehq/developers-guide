@@ -48,7 +48,7 @@ For Estatio as deployed as ECP, there is also a separate deployment which has a 
 
 Estatio (as deployed as ECP) consists of http://github.com/estatio/estatio[Estatio (open source)] along with a private repo (hosted in bitbucket) containing ECP-specific integration with CMS, General Ledger and stuff.
 
-The modules that currently make up Estatio (ECP) are shown  https://raw.githubusercontent.com/incodehq/developers-guide/master/images/estatio-ecp.png[in this diagram], rendered from this PlantUML source (via asciidoctor-diagram):
+The modules that currently make up Estatio (ECP) are shown  https://raw.githubusercontent.com/incodehq/developers-guide/master/images/estatio-ecp.png[in this diagram^], rendered from this PlantUML source (via asciidoctor-diagram):
 
 
 [plantuml, {_imagesdir}/estatio-ecp, png]
@@ -94,7 +94,7 @@ package "github/estatio" {
 
 === Estatio (Open Source) Modules
 
-The modules that currently make up Estatio can be found https://raw.githubusercontent.com/incodehq/developers-guide/master/images/estatio-and-modules.png[in this diagram], rendered from the following PlantUML source (via asciidoctor-diagram):
+The modules that currently make up Estatio can be found https://raw.githubusercontent.com/incodehq/developers-guide/master/images/estatio-and-modules.png[in this diagram^], rendered from the following PlantUML source (via asciidoctor-diagram):
 
 [plantuml, {_imagesdir}/estatio-and-modules, png]
 ....
@@ -164,7 +164,7 @@ package "incode-modules" {
 
 === Incode Modules / IsisAddons
 
-The modules that make up Incode Catalog and the Isis Addons can be found https://raw.githubusercontent.com/incodehq/developers-guide/master/images/incode-and-isisaddons.png[in this diagram], rendered from the following PlantUML source (via asciidoctor-diagram):
+The modules that make up Incode Catalog and the Isis Addons can be found https://raw.githubusercontent.com/incodehq/developers-guide/master/images/incode-and-isisaddons.png[in this diagram^], rendered from the following PlantUML source (via asciidoctor-diagram):
 
 [plantuml, {_imagesdir}/incode-and-isisaddons, png]
 ....
@@ -183,14 +183,8 @@ package "incode-modules" {
         [icm-docrendering\n-xdocreport] --> [icm-document]
     }
 
-    package "icm not currently used in Estatio" {
-        [icm-notes]
-        [icm-alias] --> [icm-base]
-        [icm-country]
-        [icm-commchannel]
-    }
-
 }
+
 
 package "isisaddons-modules" {
 
@@ -207,14 +201,6 @@ package "isisaddons-modules" {
         }
     }
 
-    package "iam not currently used in Estatio" {
-        [iam-docx]
-        [iam-publishing]
-        [iam-servletapi]
-        [iam-tags]
-        [iam-togglz]
-    }
-
     package "cross cutting" {
         [iam-audit]
         [iam-security]
@@ -226,17 +212,25 @@ package "isisaddons-modules" {
 
 }
 
-package "isisaddons-wicket" {
-    [iaw-excel]
-    [iaw-fullcalendar2]
-    [iaw-gmap3]
-}
-
-[icm-docrendering\n-freemarker] -left-> [iam-freemarker]
-[icm-docrendering\n-stringinterpolator] -left-> [iam-stringinterpolator]
-[icm-docrendering\n-xdocreport] -left-> [iam-xdocreport]
+[icm-docrendering\n-freemarker] --> [iam-freemarker]
+[icm-docrendering\n-stringinterpolator] --> [iam-stringinterpolator]
+[icm-docrendering\n-xdocreport] --> [iam-xdocreport]
 ....
 
+
+Incode Modules not currently used in Estatio:
+* `icm-notes`
+* `icm-alias`
+* `icm-country`
+* `icm-commchannel`
+
+Isis Addons packages not currently used in Estatio:
+
+* `iam-docx`
+* `iam-publishing`
+* `iam-servletapi`
+* `iam-tags`
+* `iam-togglz`
 
 == Preserving the Architectural Integrity (aka "Cheese Moving")
 
