@@ -120,7 +120,6 @@ package "github/estatio" {
         [udo-\ncharge]
 
         [udo-\ncharge] --> [udo-\ntax]
-        [udo-\npartyagreement] --> [udo-\nnumerator]
 
         [icm-\ncommunication]
 
@@ -128,23 +127,26 @@ package "github/estatio" {
         [udo-\nindex] --> [udo-\nbase]
         [udo-\nlink] --> [udo-\nbase]
         [udo-\nnumerator] --> [udo-\nbase]
-        [udo-\npartyagreement] --> [udo-\nbase]
         [udo-\ntax] --> [udo-\nbase]
         [udo-\nevent] --> [udo-\nbase]
         [udo-\nsettings] --> [udo-\nbase]
+        [udo-\nproject] --> [udo-\ncurrency]
+        [udo-\nproject] --> [udo-\npartyagreement]
 
-        [icm-\ncommunication] --> [udo-base]
+        [udo-\npartyagreement] --> [udo-\nnumerator]
+        [udo-\npartyagreement] --> [icm-\ncommunication]
+
+        [icm-\ncommunication] --> [udo-\nbase]
     }
 
+    [estatio-\ndom] --> [udo-\nproject]
     [estatio-\ndom] --> [udo-\ncharge]
     [estatio-\ndom] --> [udo-\ncurrency]
     [estatio-\ndom] --> [udo-\nindex]
     [estatio-\ndom] --> [udo-\nlink]
     [estatio-\ndom] --> [udo-\npartyagreement]
-    [estatio-\ndom] --> [udo-\ntax]
     [estatio-\ndom] --> [udo-\nevent]
     [estatio-\ndom] --> [udo-\nsettings]
-    [estatio-\ndom] --> [icm-\ncommunication]
 
 }
 
