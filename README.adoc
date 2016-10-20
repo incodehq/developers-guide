@@ -118,8 +118,7 @@ package "github/estatio" {
         [udo-charge] --> [udo-tax]
         [udo-partyagreement] --> [udo-numerator]
 
-        [udo-communication]
-        [udo-country]
+        [icm-communication]
 
         [udo-currency] --> [udo-base]
         [udo-index] --> [udo-base]
@@ -130,7 +129,7 @@ package "github/estatio" {
         [udo-event] --> [udo-base]
         [udo-settings] --> [udo-base]
 
-        [udo-communication] --> [udo-country]
+        [icm-communication] --> [udo-base]
     }
 
     [estatio-dom] --> [udo-charge]
@@ -141,7 +140,7 @@ package "github/estatio" {
     [estatio-dom] --> [udo-tax]
     [estatio-dom] --> [udo-event]
     [estatio-dom] --> [udo-settings]
-    [estatio-dom] --> [udo-communication]
+    [estatio-dom] --> [icm-communication]
 
 }
 
@@ -150,6 +149,7 @@ package "incode-modules" {
     [icm-base]
     [icm-documents] --> [icm-base]
     [icm-classification] --> [icm-base]
+    [icm-country] --> [icm-base]
 }
 
 
@@ -157,10 +157,18 @@ package "incode-modules" {
 [estatio-dom] --> [icm-classification]
 
 [udo-base] --> [icm-base]
-[udo-country] --> [icm-base]
+
+
+[icm-communication] --> [icm-country]
+[icm-communication] --> [icm-base]
+
 
 [estatio-fixture] -right-> IsisAddonsModules
 ....
+
+Note that `icm-communication` currently resides in `github/estatio`, but the intention is to move it into `incode-modules`.  
+The story (EST-866) is currently blocked because of refactoring that is required to generalize the concept of application tenancy paths (so that a given object might resolve to one or more application tenancies).
+
 
 === Incode Modules / IsisAddons
 
@@ -171,9 +179,11 @@ The modules that make up Incode Catalog and the Isis Addons can be found https:/
 package "incode-modules" {
 
     [icm-base]
+    [icm-country]
 
     package "attachments" {
         [icm-document] --> [icm-base]
+        [icm-base] --> [icm-base]
         [icm-classification]
     }
 
@@ -218,35 +228,31 @@ package "isisaddons-modules" {
 ....
 
 
-Incode Modules not currently used in Estatio:
+Incode Modules not currently used in Estatio are: 
 
-* `icm-notes`
-* `icm-alias`
-* `icm-country`
-* `icm-commchannel`
+* `icm-notes` (instead we have `udo-events`)
+* `icm-alias` (still to be integrated)
+* `icm-commchannel` (instead we have `icm-communications`).
 
-Isis Addons packages not currently used in Estatio:
+Isis Addons packages not currently used in Estatio are: 
 
-* `iam-docx`
-* `iam-publishing`
-* `iam-servletapi`
-* `iam-tags`
-* `iam-togglz`
+* `iam-docx` (instead we use SQL Server Reporting Services)
+* `iam-xdocreport` (instead we use SQL Server Reporting Services)
+* `iam-publishing`(instead we use `iam-publishmq`)
+* `iam-servletapi` (not required)
+* `iam-tags` (instead we have the "lease.brands" package of `estatio-dom`)
+* `iam-togglz`(not required)
+
 
 == Preserving the Architectural Integrity (aka "Cheese Moving")
 
-=== As-is vs To-be
+=== Module Dependencies (As-is vs To-be)
 
-The UML component diagrams above represent the "to be" case; still to do:
-
-* copy country from icm to udo
-* rename udo-communication module and packages
-* merge udo-apptenancy with udo-base
-
-
-
+The UML component diagrams above represent the "as is" case, but this remains work-in-progress.
 Longer term "cheese moving" goals:
 
+* move `icm-communications` formally out of github/estatio, and move to github/incodehq
+** currently blocked by application tenancy refactorings
 * probably split `udo-partyagreement`, separate out `udo-party` and `udo-agreement` modules
 * probably move `budgeting` package from `estatio-dom` to separate `udo-budgeting` module
 * probably move `budgetassignment` package from `estatio-dom` to separate `udo-budgetassignment` module
@@ -254,10 +260,7 @@ Longer term "cheese moving" goals:
 * probably move "financial" packages from `estatio-dom` to separate `udo-xxx` module(s)
 
 
-
-=== Modules and Schemas
-
-In terms of how to get there, the preference is:
+In terms of how this impacts database schemas, the approach we've gone for is:
 
 * all Incode catalog and Isis Addons modules should be in their own schema
 * all Estatio code should be in the `dbo` schema
@@ -265,7 +268,71 @@ In terms of how to get there, the preference is:
 ** note though that relationships between superclass/subclasses _can_ be in different schemas (which is why the table-of-two-halves pattern as used by `incode-module-classification` and `incode-module-document` works ok)
 * keep the code and the database DDL in sync
 ** don't rely on "hacks" such as `.orm` files
+** the only exception is for modules (such as `icm-country` and `icm-communications`) that have already been refactored/moved out of estatio codebase; for these the `.orm` files should be considered a temporary measure
 * use explicit (Apache Isis) `@DomainObject#objectType` and (DataNucleus) `@Discriminator` to ensure backward compatibility with persisted data
+
+
+=== Keeping tests closer to code.
+
+We also want to reorganize `dom` vs `fixture` vs `integtests`.
+Rather than have separate modules for each (resulting in all the integration tests lumped together), we instead want to group these by module so far as possible.
+
+Thus, where today we have:
+
+[tree,file="{_imagesdir}/structure-as-is.png"]
+--
+|--estatio-app
+|--estatio-dom
+|  |--lease
+|  |--invoice
+|  |--...
+|--estatio-fixture
+|  |--lease
+|  |--invoice
+|  |--...
+|--estatio-integtests
+|  |--lease
+|  |--invoice
+|  |--...
+--
+
+we instead want to evolve to:
+
+[tree,file="{_imagesdir}structure-to-be.png"]
+--
+|--estatio-lease
+|  |--dom
+|  |--fixture
+|  |--integtests
+|--estatio-invoice
+|  |--dom
+|  |--fixture
+|  |--integtests
+|--estatio-...
+|  |--dom
+|  |--fixture
+|  |--integtests
+|--estatio-app
+|  |--fixture
+|  |--integtests
+--
+
+where most of the integration tests reside with the module, but the `estatio-app` module contains any "left over" the fixtures and integration tests for the entire application.
+
+
+=== Reducing Maven Boilerplate
+
+Note also that the above refactorings could result in more boilerplate/repetition within the poms.
+That's because at the moment we have all the stuff relevant to integration tests in a single module, whereas having multiple integration test modules will obviously introduce more boilerplate.
+
+There are a couple of third-party Maven plugins that aim to provide "mixins" or "tiles", opening up the idea of reusable snippets of POM files that can be stitched together:
+
+* https://github.com/odavid/maven-plugins/tree/master/mixin-maven-plugin[mixin-maven] plugin
+
+* https://github.com/repaint-io/maven-tiles[maven-tiles] plugin
+
+Hopefully one of these might do the job.
+
 
 
 
@@ -279,6 +346,7 @@ Include:
 * use mixins rather than contributions
 * use `.layout.xml` for other layouts.
 * follow conventional prefixes for action names, to automatically pick up CSS icons (hard-coded in `EstatioAppManifest`, search for "isis.reflector.facet.cssClassFa.patterns")
+* use `XxxType.Meta` to gather together constants for datatypes (eg names, codes, descriptions etc).
 
 (There are many more, just not yet documented...)
 
