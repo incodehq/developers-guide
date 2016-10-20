@@ -21,32 +21,36 @@ The (Estatio) application and modules depend on the framework in that its domain
 On top of that are a number of modules from http://www.isisaddons.org[Isis Addons].
 These address technical cross-cutting concerns such as security, auditing, publishing, freemarker mail-merge and so-on.
 The (Estatio) domain objects don't (tend to) have any dependencies on these modules (though there are one or two mixins to allow the audit trail to be viewed, for example).
-These modules are versioned independently (following the versioning of Apache Isis itself).
+These modules are versioned independently (with a new version released for each major release of Apache Isis itself).
 
 At about the same level of abstraction are modules provided by the http://catalog.incode.org[Incode Catalog].
 These provide functionality for various generic business subdomains, such as documents, notes, aliases and classifications.
 This functionality is expected/hoped to be reusable across multiple different applications.
-These modules are versioned independently (following the versioning of Apache Isis itself).
+Like the Isis Addons, these modules are versioned independently (with a new version released for each major release of Apache Isis itself).
 
-On top of these are a number of Wicket UI components, also provided by http://www.isisaddons.org[Isis Addons].
+Also part of the application are a number of Wicket UI components, also provided by http://www.isisaddons.org[Isis Addons].
 Like the modules, the Estatio domain objects don't (tend to) have any dependencies on these Wicket UI components; the one exception is that objects that can be rendered on a map must implement the `Locatable` interface.
-These modules are versioned independently (following the versioning of Apache Isis itself).
+Again, these components are versioned independently (with a new version released for each major release of Apache Isis itself).
 
-On top of the generic business domain modules are the modules that contain the (Estatio) domain objects themselves, residing in http://github.com/estatio/estatio[Estatio (open source)] git repo.
+Sitting on top of the generic business domain modules are the modules that contain the (Estatio) domain objects themselves, residing in http://github.com/estatio/estatio[Estatio (open source)] git repo.
 There is some integration between (Estatio) domain objects and these generic subdomains, for example to allow ``Document``s to be attached to various domain objects (such as `Invoice` etc).
 To ensure modularity, these reside in separate maven modules, but are versioned together with all of them sharing a single parent `pom.xml`.
 
-Finally there is the application itself.  
-
-In the case of Estatio, this consists of further maven modules again in the http://github.com/estatio/estatio[Estatio (open source)] git repo, notably the `estatio-app` module (defining the `EstatioAppManifest` and a number of menu services) and the `estatio-webapp` module (which configures the various UI components and builds the WAR file).
+Finally there is the application itself.
+This defines the `AppManifest` (which specifies the modules make up the application) and various other configuration properties.
+It also defines the top-level menus which are presented to the end-user.
 These modules also versioned along with the Estatio domain objects mentioned above (they share the same parent `pom.xml`),
 
-For Estatio as deployed as ECP, there is also a separate deployment which has a different webapp in a private (bitbucjet) repo, and which containing ECP-specific integration with CMS, General Ledger etc using Camel, ActiveMQ and other integration technologies.
+In the case of Estatio, the application layer is actually broken into two.
+In the http://github.com/estatio/estatio[Estatio (open source)] git repo there is the `estatio-app` module (defining the `EstatioAppManifest` and menu services etc), as well as the `estatio-webapp` module (which configures the various UI components and builds the WAR file).
+In addition, there is private (bitbucket) repo that contains a replacement webapp; this is used for the deployment of Estatio at Eurocommercial Properties (ECP).
+This brings in ECP-specific integration with CMS, General Ledger etc using Camel, ActiveMQ and other integration technologies.
+
 
 
 === Estatio (ECP) Modules
 
-Estatio (as deployed as ECP) consists of http://github.com/estatio/estatio[Estatio (open source)] along with a private repo (hosted in bitbucket) containing ECP-specific integration with CMS, General Ledger and stuff.
+(As noted above), Estatio (as deployed as ECP) consists of http://github.com/estatio/estatio[Estatio (open source)] along with a private repo (hosted in bitbucket) containing ECP-specific integration with CMS, General Ledger and stuff.
 
 The modules that currently make up Estatio (ECP) are shown  https://raw.githubusercontent.com/incodehq/developers-guide/master/images/estatio-ecp.png[in this diagram^], rendered from this PlantUML source (via asciidoctor-diagram):
 
@@ -54,41 +58,41 @@ The modules that currently make up Estatio (ECP) are shown  https://raw.githubus
 [plantuml, {_imagesdir}/estatio-ecp, png]
 ....
 package "bitbucket/incode-estatio-ecp" {
-    [estatio-ecp-webapp]
-    [estatio-ecp-app]
-    [estatio-ecp-migration]
+    [estatio-ecp-\nwebapp]
+    [estatio-ecp-\napp]
+    [estatio-ecp-\nmigration]
 
     package "chemistry-opencmis" {
         [cms-client-impl]
     }
 
     package "camel" {
-        [estatio-ecp-routing]
+        [estatio-ecp-\nrouting]
     }
 
-    [estatio-ecp-webapp] -up-> [cms-client-impl]
-    [estatio-ecp-webapp] --> [activemq-web]
+    [estatio-ecp-\nwebapp] -up-> [cms-client-impl]
+    [estatio-ecp-\nwebapp] --> [activemq-web]
 
-    [estatio-ecp-webapp] --> [estatio-ecp-app]
-    [estatio-ecp-webapp] --> [estatio-ecp-migration]
-    [estatio-ecp-webapp] --> [estatio-ecp-routing]
+    [estatio-ecp-\nwebapp] --> [estatio-ecp-\napp]
+    [estatio-ecp-\nwebapp] --> [estatio-ecp-\nmigration]
+    [estatio-ecp-\nwebapp] --> [estatio-ecp-\nrouting]
 }
 
 package "github/estatio" {
-    [estatio-app]
-    [estatio-canonicalfactory]
-    [estatio-canonical]
-    [estatio-fixture]
-    [estatio-dom]
+    [estatio-\napp]
+    [estatio-\ncanonicalfactory]
+    [estatio-\ncanonical]
+    [estatio-\nfixture]
+    [estatio-\ndom]
 
-    [estatio-app] --> [estatio-fixture]
-    [estatio-fixture] --> [estatio-dom]
+    [estatio-\napp] --> [estatio-\nfixture]
+    [estatio-\nfixture] --> [estatio-\ndom]
 
-    [estatio-canonicalfactory] -up-> [estatio-canonical]
-    [estatio-canonicalfactory] --> [estatio-dom]
+    [estatio-\ncanonicalfactory] -up-> [estatio-\ncanonical]
+    [estatio-\ncanonicalfactory] --> [estatio-\ndom]
 }
 
-[estatio-ecp-app] --> [estatio-app]
+[estatio-ecp-\napp] --> [estatio-\napp]
 ....
 
 
@@ -99,71 +103,71 @@ The modules that currently make up Estatio can be found https://raw.githubuserco
 [plantuml, {_imagesdir}/estatio-and-modules, png]
 ....
 package "github/estatio" {
-    [estatio-app]
-    [estatio-canonicalfactory]
-    [estatio-canonical]
-    [estatio-fixture]
-    [estatio-dom]
+    [estatio-\napp]
+    [estatio-\ncanonicalfactory]
+    [estatio-\ncanonical]
+    [estatio-\nfixture]
+    [estatio-\ndom]
 
-    [estatio-app] --> [estatio-fixture]
-    [estatio-fixture] --> [estatio-dom]
+    [estatio-\napp] --> [estatio-\nfixture]
+    [estatio-\nfixture] --> [estatio-\ndom]
 
-    [estatio-canonicalfactory] -up-> [estatio-canonical]
-    [estatio-canonicalfactory] --> [estatio-dom]
+    [estatio-\ncanonicalfactory] -up-> [estatio-\ncanonical]
+    [estatio-\ncanonicalfactory] --> [estatio-\ndom]
 
     package "udo-modules" {
-        [udo-base]
-        [udo-charge]
+        [udo-\nbase]
+        [udo-\ncharge]
 
-        [udo-charge] --> [udo-tax]
-        [udo-partyagreement] --> [udo-numerator]
+        [udo-\ncharge] --> [udo-\ntax]
+        [udo-\npartyagreement] --> [udo-\nnumerator]
 
-        [icm-communication]
+        [icm-\ncommunication]
 
-        [udo-currency] --> [udo-base]
-        [udo-index] --> [udo-base]
-        [udo-link] --> [udo-base]
-        [udo-numerator] --> [udo-base]
-        [udo-partyagreement] --> [udo-base]
-        [udo-tax] --> [udo-base]
-        [udo-event] --> [udo-base]
-        [udo-settings] --> [udo-base]
+        [udo-\ncurrency] --> [udo-\nbase]
+        [udo-\nindex] --> [udo-\nbase]
+        [udo-\nlink] --> [udo-\nbase]
+        [udo-\nnumerator] --> [udo-\nbase]
+        [udo-\npartyagreement] --> [udo-\nbase]
+        [udo-\ntax] --> [udo-\nbase]
+        [udo-\nevent] --> [udo-\nbase]
+        [udo-\nsettings] --> [udo-\nbase]
 
-        [icm-communication] --> [udo-base]
+        [icm-\ncommunication] --> [udo-base]
     }
 
-    [estatio-dom] --> [udo-charge]
-    [estatio-dom] --> [udo-currency]
-    [estatio-dom] --> [udo-index]
-    [estatio-dom] --> [udo-link]
-    [estatio-dom] --> [udo-partyagreement]
-    [estatio-dom] --> [udo-tax]
-    [estatio-dom] --> [udo-event]
-    [estatio-dom] --> [udo-settings]
-    [estatio-dom] --> [icm-communication]
+    [estatio-\ndom] --> [udo-\ncharge]
+    [estatio-\ndom] --> [udo-\ncurrency]
+    [estatio-\ndom] --> [udo-\nindex]
+    [estatio-\ndom] --> [udo-\nlink]
+    [estatio-\ndom] --> [udo-\npartyagreement]
+    [estatio-\ndom] --> [udo-\ntax]
+    [estatio-\ndom] --> [udo-\nevent]
+    [estatio-\ndom] --> [udo-\nsettings]
+    [estatio-\ndom] --> [icm-\ncommunication]
 
 }
 
 
 package "incode-modules" {
-    [icm-base]
-    [icm-documents] --> [icm-base]
-    [icm-classification] --> [icm-base]
-    [icm-country] --> [icm-base]
+    [icm-\nbase]
+    [icm-\ndocuments] --> [icm-\nbase]
+    [icm-\nclassification] --> [icm-\nbase]
+    [icm-\ncountry] --> [icm-\nbase]
 }
 
 
-[estatio-dom] --> [icm-documents]
-[estatio-dom] --> [icm-classification]
+[estatio-\ndom] --> [icm-\ndocuments]
+[estatio-\ndom] --> [icm-\nclassification]
 
-[udo-base] --> [icm-base]
-
-
-[icm-communication] --> [icm-country]
-[icm-communication] --> [icm-base]
+[udo-\nbase] --> [icm-\nbase]
 
 
-[estatio-fixture] -right-> IsisAddonsModules
+[icm-\ncommunication] --> [icm-\ncountry]
+[icm-\ncommunication] --> [icm-\nbase]
+
+
+[estatio-\nfixture] -right-> IsisAddonsModules
 ....
 
 Note that `icm-communication` currently resides in `github/estatio`, but the intention is to move it into `incode-modules`.  
@@ -178,19 +182,18 @@ The modules that make up Incode Catalog and the Isis Addons can be found https:/
 ....
 package "incode-modules" {
 
-    [icm-base]
-    [icm-country]
+    [icm-\nbase]
+    [icm-\ncountry]
 
     package "attachments" {
-        [icm-document] --> [icm-base]
-        [icm-base] --> [icm-base]
-        [icm-classification]
+        [icm-\ndocument] --> [icm-\nbase]
+        [icm-\nclassification]
     }
 
     package "docrendering" {
-        [icm-docrendering\n-freemarker] --> [icm-document]
-        [icm-docrendering\n-stringinterpolator] --> [icm-document]
-        [icm-docrendering\n-xdocreport] --> [icm-document]
+        [icm-\ndocrendering\n-freemarker] --> [icm-\ndocument]
+        [icm-\ndocrendering\n-stringinterpolator] --> [icm-\ndocument]
+        [icm-\ndocrendering\n-xdocreport] --> [icm-\ndocument]
     }
 
 }
@@ -199,32 +202,32 @@ package "incode-modules" {
 package "isisaddons-modules" {
 
     package "utilities" {
-        [iam-pdfbox]
-        [iam-excel]
-        [iam-poly]
-        [iam-settings]
-        [iam-fakedata]
+        [iam-\npdfbox]
+        [iam-\nexcel]
+        [iam-\npoly]
+        [iam-\nsettings]
+        [iam-\nfakedata]
         package "renderers" {
-            [iam-freemarker]
-            [iam-stringinterpolator]
-            [iam-xdocreport]
+            [iam-\nfreemarker]
+            [iam-\nstringinterpolator]
+            [iam-\nxdocreport]
         }
     }
 
     package "cross cutting" {
-        [iam-audit]
-        [iam-security]
-        [iam-sessionlogger]
-        [iam-command]
-        [iam-publishmq]
-        [iam-quartz]
+        [iam-\naudit]
+        [iam-\nsecurity]
+        [iam-\nsessionlogger]
+        [iam-\ncommand]
+        [iam-\npublishmq]
+        [iam-\nquartz]
     }
 
 }
 
-[icm-docrendering\n-freemarker] --> [iam-freemarker]
-[icm-docrendering\n-stringinterpolator] --> [iam-stringinterpolator]
-[icm-docrendering\n-xdocreport] --> [iam-xdocreport]
+[icm-\ndocrendering\n-freemarker] --> [iam-\nfreemarker]
+[icm-\ndocrendering\n-stringinterpolator] --> [iam-\nstringinterpolator]
+[icm-\ndocrendering\n-xdocreport] --> [iam-\nxdocreport]
 ....
 
 
@@ -244,7 +247,9 @@ Isis Addons packages not currently used in Estatio are:
 * `iam-togglz`(not required)
 
 
-== Preserving the Architectural Integrity (aka "Cheese Moving")
+== Preserving the Architectural Integrity
+
+aka "Cheese Moving" :-)
 
 === Module Dependencies (As-is vs To-be)
 
@@ -342,13 +347,14 @@ Include:
 
 * separate out menu from repository, with the menus in `estatio-app`
 * use `@MemberOrder` to associate actions with properties or collections
-* don't have actions called "change" or "edit"; search instead for the deeper business rule
-* use mixins rather than contributions
 * use `.layout.xml` for other layouts.
+** each layout should have a General/Application level/Metadata tab
+* use mixins rather than contribution services
 * follow conventional prefixes for action names, to automatically pick up CSS icons (hard-coded in `EstatioAppManifest`, search for "isis.reflector.facet.cssClassFa.patterns")
+* don't have actions called "change" or "edit"; search instead for the deeper business rule
 * use `XxxType.Meta` to gather together constants for datatypes (eg names, codes, descriptions etc).
 
-(There are many more, just not yet documented...)
+(There are undoubtedly many more, just not yet documented...)
 
 
 
@@ -356,7 +362,7 @@ Include:
 
 === IDE
 
-We use IntelliJ; see Apache Isis documentation.
+We use IntelliJ; see the http://isis.apache.org/guides/dg.html#_dg_ide_intellij[Apache Isis docs].
 
 
 === git
@@ -368,6 +374,17 @@ Check out the http://github.com/estatio/estatio[Estatio Open Source] version and
 
 Use this https://gist.github.com/danhaywood/21b5b885433fd8bc440da3fab88c91cb[gist] to provide the `repo` and `foreach` bash functions, along with the https://gist.github.com/danhaywood/938f0f751f756b1cfd6a9751b8779407[_repos.txt] config file listing the location of all repositories.
 
+You can then commands such as:
+
+* `repo est`
+
+to switch to the first directory with "est" in its filename (all other matches are also echo'd to the console), and you can run commands against all repos, eg:
+
+* `foreach -g isis-module git fetch`
+* `foreach -g isis-module git merge --ff-only`
+* `foreach -g isis-module git commit -am \"EST-1234: corrects a problem in lots of places\"`
+
+where the `-g` flag does a grep for matching repos of the argument ("isis-module" in the example above).
 
 
 === AsciiDoc documentation
@@ -461,7 +478,7 @@ Use the format:
 EST-xxxx: fixes the yada yada yada
 ----
 
-that is, specifying the Jira issue number, and then a description of the change in the present tense.
+that is, specifying the Jira issue number, and then a description of the change in the _present_ tense.
 
 For example: 
 
@@ -514,27 +531,28 @@ In other words, we should ensure that the https://en.wikipedia.org/wiki/Single_r
 
 In the case where a user story changes functionality that resides within only te Estatio domain modules (in this git repo), then there's not much to be said: just prototype and make the change, then productionize with unit- and integration-tests.
 
-The more interesting case is a user story which changes functionality within an http://www.isisaddons.org[Isis Addons]' (technical) modules, or an http://catalog.incode.org[Incode Catalog] (business) modules:
+The slightly more complex case is a user story which changes functionality within an http://www.isisaddons.org[Isis Addons]' (technical) modules, or an http://catalog.incode.org[Incode Catalog] (business) modules.
+Most of these modules have their own demo apps and integration tests, so _in theory_ one could build out the new functionality just within that demo app.
+However, context is king, so what we recommend instead is that you do most of the work in the context of Estatio.
 
-* Most of these modules have their own demo apps and integration tests, so _in theory_ one could build out the new functionality just within that demo app.
+The steps are:
 
-* However, context is king, so what we recommend instead is that you import into the IDE in the `-SNAPSHOT` version of the module to be changed, and update Estatio locally to reference that `-SNAPSHOT`.
-
+* import (into IntelliJ) the `-SNAPSHOT` version of the module to be changed
+* update Estatio locally to reference that `-SNAPSHOT`.
+* if necessary, do a manual reimport of all existing Estatio modules (to make sure that IntelliJ's classpaths are correctly resolving to the snapshot)
 * You can then prototype and develop the changes.
 
-* When the feature is more or less there, then switch back to the demo app and productionize the changes by adding in any unit- and integration tests for the functionality that has been prototyped.
+When the feature is more or less there, then:
 
-[CAUTION]
-====
-Not all of the modules have their own demo app.
-In such cases, ideally it would be best to take the time to create a demo app first, then proceed as above.
-But, if that time can't be justified, then just develop and test the changes within Estatio.
-====
+* switch back to the demo app and productionize the changes by adding in any unit- and integration tests for the functionality that has been prototyped
+* push out an interim release of the module (details below)
+* update Estatio to reference the interim release.
+* push the changes for Estatio itself.
 
-The Estatio application itself MUST NOT have dependencies on `-SNAPSHOT` versions (because otherwise we lose traceability).
-Thus, for those stories where a module has been revised, a new interim release must be created of that module.
-This is done using the `interim-release.sh` script.
+We insist on using interim releases because to ensure traceability.
 
+
+The mechanics of creating an interim release are very simple, just call `interim-release.sh` script in the module's root directory.
 You will find that the `README` for each module explains how this is done; basically though it's just a matter of running a command such as:
 
 [source,bash]
@@ -550,7 +568,6 @@ where:
 Estatio's CI server (on CloudBees) will then create a new timestamped build, eg `1.13.0.20161017-1231`; this is published to the http://repository-estatio.forge.cloudbees.com/snapshot/[Snapshot repository], eg for the http://repository-estatio.forge.cloudbees.com/snapshot/org/incode/module/[Incode Catalog] or the
 http://repository-estatio.forge.cloudbees.com/snapshot/org/isisaddons/module/[Isis Addons modules]. 
 
-Finally, update Estatio to depend upon this newly minted interim version.
 
 
 
@@ -565,7 +582,7 @@ See the `README` in the private ECP repository for more info.
 
 We use link:https://debugmail.io[debugmail.io] for testing.
 This provides an SMTP service and a web UI that lets the emails received be inspected and optionally forwarded onto a "real" email account.
-See the `README` in the private ECP repository for more info on how to run the application with the correct configuration properties to test this.
+See the `README` in the private ECP (bitbucket) repo for more info on how to run the application with the correct configuration properties to test this.
 
 
 
