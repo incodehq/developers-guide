@@ -564,11 +564,17 @@ sh interim-release.sh 1.13.0 origin
 
 where:
 
-* `1.13.0` is the base release (adjust as necessary)
+* `1.13.0` is the base release; use the last version released to link:http://search.maven.org/[Maven Central] for this valu
 * `origin` is the repo to push back to.
 
-Estatio's CI server (on CloudBees) will then create a new timestamped build, eg `1.13.0.20161017-1231`; this is published to the http://repository-estatio.forge.cloudbees.com/snapshot/[Snapshot repository], eg for the http://repository-estatio.forge.cloudbees.com/snapshot/org/incode/module/[Incode Catalog] or the
+Estatio's CI server (on CloudBees) will then create a new timestamped build, eg `1.13.0.20161017-1231`; this is published to the link:http://repository-estatio.forge.cloudbees.com/snapshot/[Snapshot repository], eg for the http://repository-estatio.forge.cloudbees.com/snapshot/org/incode/module/[Incode Catalog] or the
 http://repository-estatio.forge.cloudbees.com/snapshot/org/isisaddons/module/[Isis Addons modules]. 
+
+If you make a mistake or need to revert, then you'll need to:
+
+* manually delete your local and the remote tag
+** there's no need to delete the remote branch, as it will be deleted anyway when the subsequent interim release is created.
+* mount the Estatio snapshot repo using https://go.cloudbees.com/docs/cloudbees-documentation/dev-at-cloud/Mounting+DAV+Repositories.html[DAV] and delete the artifact
 
 
 
