@@ -4,7 +4,7 @@ This guide is intended for the developers of Estatio (and other applications).
 
 :_imagesdir: images/
 
-Download https://github.com/incodehq/developers-guide/blob/master/pdf/developers-guide.pdf[PDF]
+Download link:developers-guide.pdf[PDF]
 
 
 
@@ -13,7 +13,7 @@ Download https://github.com/incodehq/developers-guide/blob/master/pdf/developers
 Incode applications (most notably Estatio) consists of multiple modules, deployed as a single WAR (a "modular monolith").
 These modules are layered as follows:
 
-image::https://raw.githubusercontent.com/incodehq/developers-guide/master/pptx/modules.png[]
+image::{_imagesdir}/modules.png[]
 
 At the bottom is http://isis.apache.org[Apache Isis] framework.
 The (Estatio) application and modules depend on the framework in that its domain objects are annotated with Apache Isis and DataNucleus annotations, and use domain services provided by Apache Isis (such as `RepositoryService` and `TitleService`).
@@ -284,45 +284,48 @@ In terms of how this impacts database schemas, the approach we've gone for is:
 We also want to reorganize `dom` vs `fixture` vs `integtests`.
 Rather than have separate modules for each (resulting in all the integration tests lumped together), we instead want to group these by module so far as possible.
 
+
 Thus, where today we have:
 
-[tree,file="{_imagesdir}/structure-as-is.png"]
---
-|--estatio-app
-|--estatio-dom
-|  |--lease
-|  |--invoice
-|  |--...
-|--estatio-fixture
-|  |--lease
-|  |--invoice
-|  |--...
-|--estatio-integtests
-|  |--lease
-|  |--invoice
-|  |--...
---
+[monotree]
+----
++
+ - estatio-app
+ + estatio-dom
+  - lease
+  - invoice
+  - ...   
+ + estatio-fixture
+  - lease
+  - invoice
+  - ...   
+ + estatio-integtests
+  - lease
+  - invoice
+  - ...
+----
 
 we instead want to evolve to:
 
-[tree,file="{_imagesdir}structure-to-be.png"]
---
-|--estatio-lease
-|  |--dom
-|  |--fixture
-|  |--integtests
-|--estatio-invoice
-|  |--dom
-|  |--fixture
-|  |--integtests
-|--estatio-...
-|  |--dom
-|  |--fixture
-|  |--integtests
-|--estatio-app
-|  |--fixture
-|  |--integtests
---
+[monotree]
+----
++
+ + estatio-lease
+  - dom
+  - fixture
+  - integtests
+ + estatio-invoice
+  - dom
+  - fixture
+  - integtests
+ + estatio-   
+  - dom
+  - fixture
+  - integtests
+ + estatio-app
+  - fixture
+  - integtests
+----
 
 where most of the integration tests reside with the module, but the `estatio-app` module contains any "left over" the fixtures and integration tests for the entire application.
 
@@ -404,6 +407,12 @@ Also, install GraphViz (to enable asciidiagram support, eg component diagrams ab
 
 == Development Practices
 
+[quote,Voltaire]
+____
+Don't let perfect be the enemy of good
+____
+
+
 === Kanban Boards
 
 We maintain a (private) JIRA with two Kanban boards:
@@ -413,6 +422,51 @@ We maintain a (private) JIRA with two Kanban boards:
 * Backlog, groomed weekly.
 
 Periodically stories are moved from the "Backlog" board to the "Daily Standup" board.
+
+
+=== User stories have value
+
+All stories should provide some sort of value to the business; thus their value can be compared and the stories prioritized accordingly.
+The corollary is that all stories must be _meaningful_ to the business in one way or another.
+Even a seemingly technical story (such as improving performance) should be expressed in terms the value it delivers to the business.
+
+Many (perhaps most) stories will be associated with an *epic*, in which case it is the epic that needs to have a meaning to the business (even if not every story within does).
+
+
+=== Story checklists ("definition of done")
+
+Use the following checklist to identify the tasks that might need to be done in order to complete a story:
+
+* Scoping
+** which code module(s) are impacted
+*** will code in >1 module be updated?
+*** will new modules be created?
+** will their be any database schema changes
+*** and if so, have any database views been impacted?
+** will there be any data migation?
+** is this a new feature, or modifying an existing feature
+*** how high is the overall risk?
+* Code Implementation
+** are actions used for business modifications with side-effects?
+** are simple property edits used when no side-effects?
+** are their integration tests for repository queries (JDOQL)
+*** have any existing unit tests been removed as unnecessary
+* are typesafe queries used rather than JDOQL?
+* Removing deprecated features
+** have any `injectXxx()` and `setXxx()` been replaced by `@Inject`
+** has AssertJ been used rather than Hamcrest
+** replace JDOQL with typesafe queries
+* Documentation
+** `README.adoc` for the module updated (if required)
+** any incremental documentation (eg user guide) updated ?
+
+
+[TIP]
+====
+We'll extend/refine this checklist in future...
+====
+
+This checklist should be consulted when the story is initially created, and reviewed again as the story is completed and goes into review (discussed below).
 
 
 === Story lifecycle
@@ -440,9 +494,9 @@ Overall then, the process is:
 
 * identify the story, pull from "Current" column of "Daily Stand-up" board to "In progress", and assign to yourself. +
 +
-[NOTE]
+[WARNING]
 ====
-It's bad form to push work onto developers, rather developers pull work onto them.
+It's bad form to push work onto developers; instead developers should pull work onto themselves.
 ====
 
 * Identify what needs to be done. +
@@ -466,6 +520,9 @@ Find someone to review the changes.
 
 * With another developer, review the changes in the PR.
 If both happy, then merge the PR and push to `master`.
+
+
+
 
 
 
@@ -588,9 +645,7 @@ See the `README` in the private ECP repository for more info.
 
 ==== Testing email
 
-We use link:https://debugmail.io[debugmail.io] for testing.
-This provides an SMTP service and a web UI that lets the emails received be inspected and optionally forwarded onto a "real" email account.
-See the `README` in the private ECP (bitbucket) repo for more info on how to run the application with the correct configuration properties to test this.
+We use a custom version of `EmailService` that allows the email address(es) that the email is being sent to be overridden using configuration properties.
 
 
 
