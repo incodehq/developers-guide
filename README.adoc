@@ -11,7 +11,7 @@ Install Java and Maven, then simply type:
 [source]
 ----
 mvn
----
+----
 
 This will generate the PDF and HTML to the link:target/generated-docs[`target/generated-docs`] directory.
 
