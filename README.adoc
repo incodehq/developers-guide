@@ -1,0 +1,17 @@
+= IncodeHQ Developers Guide
+
+This guide has been authored in plain text, using asciidoc.
+To edit, we recommend using http://asciidocfx.com/["AsciidocFX"].  
+
+The source files are in link:src/main/asciidoc[`src/main/asciidoc`] directory.
+
+To build, use Apache Maven.
+Install Java and Maven, then simply type:
+
+[source]
+----
+mvn
+---
+
+This will generate the PDF and HTML to the link:target/generated-docs[`target/generated-docs`] directory.
+
