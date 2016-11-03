@@ -1,10 +1,9 @@
 = Incode Developers' Guide
+:_imagesdir: images/
 
 This guide is intended for the developers of Estatio (and other applications).
 
-:_imagesdir: images/
-
-Download link:developers-guide.pdf[PDF]
+Details as to how to build this guide (as HTML or PDF) can be found in this xref:_building-this-guide[appendix].
 
 
 
@@ -253,7 +252,7 @@ Isis Addons packages not currently used in Estatio are:
 
 aka "Cheese Moving" :-)
 
-=== Module Dependencies (As-is vs To-be)
+=== Modules (As-is vs To-be)
 
 The UML component diagrams above represent the "as is" case, but this remains work-in-progress.
 Longer term "cheese moving" goals:
@@ -346,20 +345,7 @@ Hopefully one of these might do the job.
 
 
 
-== Idioms and Patterns
 
-Include:
-
-* separate out menu from repository, with the menus in `estatio-app`
-* use `@MemberOrder` to associate actions with properties or collections
-* use `.layout.xml` for other layouts.
-** each layout should have a General/Application level/Metadata tab
-* use mixins rather than contribution services
-* follow conventional prefixes for action names, to automatically pick up CSS icons (hard-coded in `EstatioAppManifest`, search for "isis.reflector.facet.cssClassFa.patterns")
-* don't have actions called "change" or "edit"; search instead for the deeper business rule
-* use `XxxType.Meta` to gather together constants for datatypes (eg names, codes, descriptions etc).
-
-(There are undoubtedly many more, just not yet documented...)
 
 
 
@@ -446,16 +432,7 @@ Use the following checklist to identify the tasks that might need to be done in 
 ** will there be any data migation?
 ** is this a new feature, or modifying an existing feature
 *** how high is the overall risk?
-* Code Implementation
-** are actions used for business modifications with side-effects?
-** are simple property edits used when no side-effects?
-** are their integration tests for repository queries (JDOQL)
-*** have any existing unit tests been removed as unnecessary
-* are typesafe queries used rather than JDOQL?
-* Removing deprecated features
-** have any `injectXxx()` and `setXxx()` been replaced by `@Inject`
-** has AssertJ been used rather than Hamcrest
-** replace JDOQL with typesafe queries
+* Follow xref:_design-coding-standards[design/coding standards]
 * Documentation
 ** `README.adoc` for the module updated (if required)
 ** any incremental documentation (eg user guide) updated ?
@@ -679,42 +656,49 @@ repo ecp
 sh release.sh -j EST-1234 -r 1.7.0 -s 1.8.0-SNAPSHOT
 ----
 
+[appendix]
+[[_design-coding-standards]]
+== Design/Coding Standards
+
+Include:
+
+* separate out menu from repository, with the menus in `estatio-app`
+* use `@MemberOrder` to associate actions with properties or collections
+* use `.layout.xml` for other layouts.
+** each layout should have a General/Application level/Metadata tab
+* use mixins rather than contribution services
+* follow conventional prefixes for action names, to automatically pick up CSS icons (hard-coded in `EstatioAppManifest`, search for "isis.reflector.facet.cssClassFa.patterns")
+* don't have actions called "change" or "edit"; search instead for the deeper business rule
+* use `XxxType.Meta` to gather together constants for datatypes (eg names, codes, descriptions etc).
+* use actions vs property edits appropriately
+** actions used for business modifications with side-effects
+** simple property edits used when no side-effects?
+* test repository queries using integration tests (not unit tests)
+* are typesafe queries used rather than JDOQL?
+* Remove deprecated features
+** replace deprecated Apache Isis annotations and domain services
+** have any `injectXxx()` and `setXxx()` been replaced by `@Inject`
+** has AssertJ been used rather than Hamcrest
+** replace JDOQL with typesafe queries
 
 
-
-== Appendices
-
-=== How to generate this guide as a PDF
-
-This guide can be generated as a guide simply by loading into AsciidocFX and then saving as a PDF.
-Copy into the `pdf/` folder.
+(There are undoubtedly many more, just not yet documented...)
 
 
+[appendix]
+[[_building-this-guide]]
+== Building this guide
 
-=== How to generate the AsciiDoc pages
-
-For the AsciiDoc pages in `adocs/documentation`, just run:
+This guide can be generated using Maven; as simple as:
 
 [source]
 ----
-cd adocs/documentation
-mvn site
+mvn
 ----
 
-The `.html` will be generated in `target/site`.
-It should be possible to load the HTML straight from the directory.
-Alternatively, load from a webserver, eg:
+The PDF and html versions are created in `target/generated-docs`.
 
-[source]
-----
-python -m SimpleHTTPServer
-----
+Alternatively, you can simply load up `src/main/asciidoc/README.adoc` into AsciidocFX and then manually save as PDF.
+(Note that AsciidocFX uses its own template, so the PDF will be different to that created by Maven).
 
-and browse to link:http://localhost:8000[http://localhost:8000].
-
-The `mvn` script also generates docbook XML and PDF, but there are some caveats:
-
-* the PDF currently does not include images at all.
-
-* Using link:https://github.com/asciidoctor/asciidoctor-fopub[asciidoctor-fopub] the XML can be converted to PDF; however there are currently some issues with images being scaled correctly.
 
