@@ -1,0 +1,98 @@
+== Preserving the Architectural Integrity
+:_imagesdir: images/
+
+aka "Cheese Moving" :-)
+
+=== Modules (As-is vs To-be)
+
+The UML component diagrams above represent the "as is" case, but this remains work-in-progress.
+Longer term "cheese moving" goals:
+
+* move `icm-communications` formally out of github/estatio, and move to github/incodehq
+** currently blocked by application tenancy refactorings
+* probably split `udo-partyagreement`, separate out `udo-party` and `udo-agreement` modules
+* probably move `budgeting` package from `estatio-dom` to separate `udo-budgeting` module
+* probably move `budgetassignment` package from `estatio-dom` to separate `udo-budgetassignment` module
+* probably move `invoice` package from `estatio-dom` to separate `udo-invoice` module
+* probably move "financial" packages from `estatio-dom` to separate `udo-xxx` module(s)
+
+
+In terms of how this impacts database schemas, the approach we've gone for is:
+
+* all Incode catalog and Isis Addons modules should be in their own schema
+* all Estatio code should be in the `dbo` schema
+** this is mostly because we haven't yet found a way to make DataNucleus work with PK/FKs of entities in different schemas
+** note though that relationships between superclass/subclasses _can_ be in different schemas (which is why the table-of-two-halves pattern as used by `incode-module-classification` and `incode-module-document` works ok)
+* keep the code and the database DDL in sync
+** don't rely on "hacks" such as `.orm` files
+** the only exception is for modules (such as `icm-country` and `icm-communications`) that have already been refactored/moved out of estatio codebase; for these the `.orm` files should be considered a temporary measure
+* use explicit (Apache Isis) `@DomainObject#objectType` and (DataNucleus) `@Discriminator` to ensure backward compatibility with persisted data
+
+
+=== Keeping tests closer to code.
+
+We also want to reorganize `dom` vs `fixture` vs `integtests`.
+Rather than have separate modules for each (resulting in all the integration tests lumped together), we instead want to group these by module so far as possible.
+
+
+Thus, where today we have:
+
+[monotree]
+----
++
+ - estatio-app
+ + estatio-dom
+  - lease
+  - invoice
+  - ...   
+ + estatio-fixture
+  - lease
+  - invoice
+  - ...   
+ + estatio-integtests
+  - lease
+  - invoice
+  - ...
+----
+
+we instead want to evolve to:
+
+[monotree]
+----
++
+ + estatio-lease
+  - dom
+  - fixture
+  - integtests
+ + estatio-invoice
+  - dom
+  - fixture
+  - integtests
+ + estatio-   
+  - dom
+  - fixture
+  - integtests
+ + estatio-app
+  - fixture
+  - integtests
+----
+
+where most of the integration tests reside with the module, but the `estatio-app` module contains any "left over" the fixtures and integration tests for the entire application.
+
+
+=== Reducing Maven Boilerplate
+
+Note also that the above refactorings could result in more boilerplate/repetition within the poms.
+That's because at the moment we have all the stuff relevant to integration tests in a single module, whereas having multiple integration test modules will obviously introduce more boilerplate.
+
+There are a couple of third-party Maven plugins that aim to provide "mixins" or "tiles", opening up the idea of reusable snippets of POM files that can be stitched together:
+
+* https://github.com/odavid/maven-plugins/tree/master/mixin-maven-plugin[mixin-maven] plugin
+
+* https://github.com/repaint-io/maven-tiles[maven-tiles] plugin
+
+Hopefully one of these might do the job.
+
+
+
+

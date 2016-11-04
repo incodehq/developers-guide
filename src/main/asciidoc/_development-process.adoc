@@ -1,0 +1,99 @@
+== Development Process
+
+
+[quote,Voltaire]
+____
+Don't let perfect be the enemy of good
+____
+
+
+=== Kanban Boards
+
+We maintain a (private) JIRA with two Kanban boards:
+
+* Daily Stand-up, reviewed daily.
+
+* Backlog, groomed weekly.
+
+Periodically stories are moved from the "Backlog" board to the "Daily Standup" board.
+
+
+=== User stories have value (epics)
+
+All stories should provide some sort of value to the business; thus their value can be compared and the stories prioritized accordingly.
+The corollary is that all stories must be _meaningful_ to the business in one way or another.
+Even a seemingly technical story (such as improving performance) should be expressed in terms the value it delivers to the business.
+
+Many (perhaps most) stories will be associated with an *epic*, in which case it is the epic that needs to have a meaning to the business (even if not every story within does).
+We use the `ECP` Jira project for all epics.
+
+
+=== Projects vs Products
+
+We use Jira Projects to keep track of software products:
+
+* `EST` = Estatio
+* `ELI` = ContactApp
+* `ECPCRM` = Kiosk
+
+(As noted above) the `ECP` Jira project is used to keep track of our epics.
+The stories within this epic could be taken from any of the different products.
+
+[WARNING]
+====
+TODO: we need to create additional Jira projects for Nuxeo, Docker etc. etc.
+====
+
+
+
+
+
+
+=== Story lifecycle
+
+(As its name suggests) the "Daily Stand-up" board is reviewed daily, and helps the team synchronize on work.
+For example, a story may need reviewing, in which case this can be flagged, or it may be blocked, awaiting input.
+The board itself defines the following columns:
+
+* Next - longer-term stories (arrived from the Backlog)
+* Current - work ready to put into play
+* Blocked - awaiting input, eg from the business or external vendors
+* In Progress - actively being worked on
+* In Review - completed, waiting for review by some other team member
+* Done - completed and merged into `master`, awaiting deployment.
+
+We from right to left, looking to move stuff across the board.
+
+If a new story is created in JIRA, then our workflow adds it to the "Current" column.
+This brings it to the attention of all for the next days stand-up (where it will either remain where it is, or perhaps be moved to the "Next" column or even the Backlog board if lower priority).
+
+We aim to keep `master` deployable to production at all times.
+For all but the most trivial stories we use git branches and pull requests to allow stories to be reviewed by others in the team.
+
+Overall then, the process is:
+
+* identify the story, pull from "Current" column of "Daily Stand-up" board to "In progress", and assign to yourself. +
++
+[WARNING]
+====
+It's bad form to push work onto developers; instead developers should pull work onto themselves.
+====
+
+* Identify what needs to be done. +
++
+Use the xref:_definition-of-done[definition of done] checklist as a starting point.
+
+* Create and work in a new git branch
+
+* If blocked on a story, and no-one is available to immediately assist, then move the story to "Blocked" and find some other work
+
+* When done, push the branch and raise a PR.
+Move the story to "For Review".
+Ensure that any DB scripts that might need to be applied are clearly identified.
+Find someone to review the changes.
+
+* With another developer, review the changes in the PR.
+If both happy, then merge the PR and push to `master`.
+
+
+

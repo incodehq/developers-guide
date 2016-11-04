@@ -1,0 +1,19 @@
+[appendix]
+[[_building-this-guide]]
+== Building this guide
+
+:_imagesdir: images/
+
+This guide can be generated using Maven; as simple as:
+
+[source]
+----
+mvn
+----
+
+The PDF and html versions are created in `target/generated-docs`.
+
+Alternatively, you can simply load up `src/main/asciidoc/README.adoc` into AsciidocFX and then manually save as PDF.
+(Note that AsciidocFX uses its own template, so the PDF will be different to that created by Maven).
+
+

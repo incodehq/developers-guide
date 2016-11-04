@@ -1,0 +1,128 @@
+== Development Practices
+
+:_imagesdir: images/
+
+
+
+
+
+
+
+=== Working on multiple modules
+
+(As discussed above), Estatio consists of multiple modules:
+
+* http://www.isisaddons.org[Isis Addons]' (technical) modules and wicket UI components each reside in their own git repo.
+These are versioned independently, generally tracking that of Apache Isis itself (eg `1.13.0`, `1.13.1`, `1.13.2` might all be releases running on top of Apache Isis `1.13.0`).
+They are re-released every time there is a new release of Apache Isis itself.
+
+* http://catalog.incode.org[Incode Catalog] (business) modules also each reside in their own git repo.
+These too are re-released every time there is a new release of Apache Isis itself.
+
+* Domain objects specific to Estatio itself (`Party`, `Lease`, `Invoice` etc are in separate maven modules) within the http://github.com/estatio/estatio[Estatio (open source)] git repo.
+These are split into different to eliminate cyclic dependencies between modules (to avoid the big ball of mud). +
++
+The Estatio application itself is also in maven modules within the http://github.com/estatio/estatio[Estatio (open source)] git repo.
+
+
+For any given user story, we expect that changes should only need to be made to code in one module.
+
+[IMPORTANT]
+====
+If we find that it isn't the case that any given user story only changes code in one module, then that is an indicator that the boundaries between the modules themselves maybe wrong, so should probably be reworked.
+In other words, we should ensure that the https://en.wikipedia.org/wiki/Single_responsibility_principle[single responsibility principle] is followed: code that changes at the same rate should be grouped together.
+====
+
+
+In the case where a user story changes functionality that resides within only te Estatio domain modules (in this git repo), then there's not much to be said: just prototype and make the change, then productionize with unit- and integration-tests.
+
+The slightly more complex case is a user story which changes functionality within an http://www.isisaddons.org[Isis Addons]' (technical) modules, or an http://catalog.incode.org[Incode Catalog] (business) modules.
+Most of these modules have their own demo apps and integration tests, so _in theory_ one could build out the new functionality just within that demo app.
+However, context is king, so what we recommend instead is that you do most of the work in the context of Estatio.
+
+The steps are:
+
+* import (into IntelliJ) the `-SNAPSHOT` version of the module to be changed
+* update Estatio locally to reference that `-SNAPSHOT`.
+* if necessary, do a manual reimport of all existing Estatio modules (to make sure that IntelliJ's classpaths are correctly resolving to the snapshot)
+* You can then prototype and develop the changes.
+
+When the feature is more or less there, then:
+
+* switch back to the demo app and productionize the changes by adding in any unit- and integration tests for the functionality that has been prototyped
+* push out an interim release of the module (details below)
+* update Estatio to reference the interim release.
+* push the changes for Estatio itself.
+
+We insist on using interim releases because to ensure traceability.
+
+
+The mechanics of creating an interim release are very simple, just call `interim-release.sh` script in the module's root directory.
+You will find that the `README` for each module explains how this is done; basically though it's just a matter of running a command such as:
+
+[source,bash]
+----
+sh interim-release.sh 1.13.0 origin
+----
+
+where:
+
+* `1.13.0` is the base release; use the last version released to link:http://search.maven.org/[Maven Central] for this valu
+* `origin` is the repo to push back to.
+
+Estatio's CI server (on CloudBees) will then create a new timestamped build, eg `1.13.0.20161017-1231`; this is published to the link:http://repository-estatio.forge.cloudbees.com/snapshot/[Snapshot repository], eg for the http://repository-estatio.forge.cloudbees.com/snapshot/org/incode/module/[Incode Catalog] or the
+http://repository-estatio.forge.cloudbees.com/snapshot/org/isisaddons/module/[Isis Addons modules]. 
+
+If you make a mistake or need to revert, then you'll need to:
+
+* manually delete your local and the remote tag
+** there's no need to delete the remote branch, as it will be deleted anyway when the subsequent interim release is created.
+* mount the Estatio snapshot repo using https://go.cloudbees.com/docs/cloudbees-documentation/dev-at-cloud/Mounting+DAV+Repositories.html[DAV] and delete the artifact
+
+
+
+
+=== Deploying to Dev or Test servers.
+
+In the `estatio-ecp` repo the `deploy-tomcat8.sh` script can be used to deploy.  
+See the `README` in the private ECP repository for more info.
+
+
+
+==== Testing email
+
+We use a custom version of `EmailService` that allows the email address(es) that the email is being sent to be overridden using configuration properties.
+
+
+
+=== Releasing and Deploying to Production
+
+Periodically the code in `master` will be deployed to production.
+
+First it is released, then deployed.
+
+To release the open source version, use eg:
+
+[source]
+----
+repo est
+sh release.sh -j EST-1234 -r 1.7.0 -s 1.8.0-SNAPSHOT
+----
+
+where:
+
+* -j is the JIRA number
+* -r is the release version
+* -s is the next snapshot version
+
+
+Then, for the `estatio-ecp` repo, use the same command, eg:
+
+
+[source,bash]
+----
+repo ecp
+sh release.sh -j EST-1234 -r 1.7.0 -s 1.8.0-SNAPSHOT
+----
+
+

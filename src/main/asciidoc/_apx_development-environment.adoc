@@ -1,0 +1,46 @@
+[appendix]
+[[_development-environment]]
+= Development Environment
+
+:_imagesdir: images/
+
+=== IDE
+
+We use IntelliJ; see the http://isis.apache.org/guides/dg.html#_dg_ide_intellij[Apache Isis docs].
+
+
+=== git
+
+Check out the http://github.com/estatio/estatio[Estatio Open Source] version and also the ECP private version (from bitbucket).
+
+
+=== repo and foreach scripts
+
+Use this https://gist.github.com/danhaywood/21b5b885433fd8bc440da3fab88c91cb[gist] to provide the `repo` and `foreach` bash functions, along with the https://gist.github.com/danhaywood/938f0f751f756b1cfd6a9751b8779407[_repos.txt] config file listing the location of all repositories.
+
+You can then commands such as:
+
+* `repo est`
+
+to switch to the first directory with "est" in its filename (all other matches are also echo'd to the console), and you can run commands against all repos, eg:
+
+* `foreach -g isis-module git fetch`
+* `foreach -g isis-module git merge --ff-only`
+* `foreach -g isis-module git commit -am \"EST-1234: corrects a problem in lots of places\"`
+
+where the `-g` flag does a grep for matching repos of the argument ("isis-module" in the example above).
+
+
+=== AsciiDoc documentation
+
+We use Asciidoc for our documentation (such as it is).
+These reside in `adocs/documentation` directory, along with this README, of course.
+There is also some older non-Asciidoc documentation under `docs/` directory.
+
+Recommended for editing http://asciidocfx.com/[Asciidoc], which is cross-platform.
+This provides side-by-side preview of the document (with sync'ed scrolling), and an outline view of the document.
+
+Also, install GraphViz (to enable asciidiagram support, eg component diagrams above).
+
+
+

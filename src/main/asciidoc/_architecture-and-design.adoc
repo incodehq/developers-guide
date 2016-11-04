@@ -1,0 +1,243 @@
+== Architecture and Design
+
+:_imagesdir: images/
+
+Incode applications (most notably Estatio) consists of multiple modules, deployed as a single WAR (a "modular monolith").
+These modules are layered as follows:
+
+image::{_imagesdir}/modules.png[]
+
+At the bottom is http://isis.apache.org[Apache Isis] framework.
+The (Estatio) application and modules depend on the framework in that its domain objects are annotated with Apache Isis and DataNucleus annotations, and use domain services provided by Apache Isis (such as `RepositoryService` and `TitleService`).
+
+On top of that are a number of modules from http://www.isisaddons.org[Isis Addons].
+These address technical cross-cutting concerns such as security, auditing, publishing, freemarker mail-merge and so-on.
+The (Estatio) domain objects don't (tend to) have any dependencies on these modules (though there are one or two mixins to allow the audit trail to be viewed, for example).
+These modules are versioned independently (with a new version released for each major release of Apache Isis itself).
+
+At about the same level of abstraction are modules provided by the http://catalog.incode.org[Incode Catalog].
+These provide functionality for various generic business subdomains, such as documents, notes, aliases and classifications.
+This functionality is expected/hoped to be reusable across multiple different applications.
+Like the Isis Addons, these modules are versioned independently (with a new version released for each major release of Apache Isis itself).
+
+Also part of the application are a number of Wicket UI components, also provided by http://www.isisaddons.org[Isis Addons].
+Like the modules, the Estatio domain objects don't (tend to) have any dependencies on these Wicket UI components; the one exception is that objects that can be rendered on a map must implement the `Locatable` interface.
+Again, these components are versioned independently (with a new version released for each major release of Apache Isis itself).
+
+Sitting on top of the generic business domain modules are the modules that contain the (Estatio) domain objects themselves, residing in http://github.com/estatio/estatio[Estatio (open source)] git repo.
+There is some integration between (Estatio) domain objects and these generic subdomains, for example to allow ``Document``s to be attached to various domain objects (such as `Invoice` etc).
+To ensure modularity, these reside in separate maven modules, but are versioned together with all of them sharing a single parent `pom.xml`.
+
+Finally there is the application itself.
+This defines the `AppManifest` (which specifies the modules make up the application) and various other configuration properties.
+It also defines the top-level menus which are presented to the end-user.
+These modules also versioned along with the Estatio domain objects mentioned above (they share the same parent `pom.xml`),
+
+In the case of Estatio, the application layer is actually broken into two.
+In the http://github.com/estatio/estatio[Estatio (open source)] git repo there is the `estatio-app` module (defining the `EstatioAppManifest` and menu services etc), as well as the `estatio-webapp` module (which configures the various UI components and builds the WAR file).
+In addition, there is private (bitbucket) repo that contains a replacement webapp; this is used for the deployment of Estatio at Eurocommercial Properties (ECP).
+This brings in ECP-specific integration with CMS, General Ledger etc using Camel, ActiveMQ and other integration technologies.
+
+
+
+=== Estatio (ECP) Modules
+
+(As noted above), Estatio (as deployed as ECP) consists of http://github.com/estatio/estatio[Estatio (open source)] along with a private repo (hosted in bitbucket) containing ECP-specific integration with CMS, General Ledger and stuff.
+
+The modules that currently make up Estatio (ECP) are shown  https://raw.githubusercontent.com/incodehq/developers-guide/master/src/main/asciidoc/images/estatio-ecp.png[in this diagram^], rendered from this PlantUML source (via asciidoctor-diagram):
+
+
+[plantuml, {_imagesdir}/estatio-ecp, png]
+....
+package "bitbucket/incode-estatio-ecp" {
+    [estatio-ecp-\nwebapp]
+    [estatio-ecp-\napp]
+    [estatio-ecp-\nmigration]
+
+    package "chemistry-opencmis" {
+        [cms-client-impl]
+    }
+
+    package "camel" {
+        [estatio-ecp-\nrouting]
+    }
+
+    [estatio-ecp-\nwebapp] -up-> [cms-client-impl]
+    [estatio-ecp-\nwebapp] --> [activemq-web]
+
+    [estatio-ecp-\nwebapp] --> [estatio-ecp-\napp]
+    [estatio-ecp-\nwebapp] --> [estatio-ecp-\nmigration]
+    [estatio-ecp-\nwebapp] --> [estatio-ecp-\nrouting]
+}
+
+package "github/estatio" {
+    [estatio-\napp]
+    [estatio-\ncanonicalfactory]
+    [estatio-\ncanonical]
+    [estatio-\nfixture]
+    [estatio-\ndom]
+
+    [estatio-\napp] --> [estatio-\nfixture]
+    [estatio-\nfixture] --> [estatio-\ndom]
+
+    [estatio-\ncanonicalfactory] -up-> [estatio-\ncanonical]
+    [estatio-\ncanonicalfactory] --> [estatio-\ndom]
+}
+
+[estatio-ecp-\napp] --> [estatio-\napp]
+....
+
+
+=== Estatio (Open Source) Modules
+
+The modules that currently make up Estatio can be found https://raw.githubusercontent.com/incodehq/developers-guide/master/src/main/asciidoc/images/estatio-and-modules.png[in this diagram^], rendered from the following PlantUML source (via asciidoctor-diagram):
+
+[plantuml, {_imagesdir}/estatio-and-modules, png]
+....
+package "github/estatio" {
+    [estatio-\napp]
+    [estatio-\ncanonicalfactory]
+    [estatio-\ncanonical]
+    [estatio-\nfixture]
+    [estatio-\ndom]
+
+    [estatio-\napp] --> [estatio-\nfixture]
+    [estatio-\nfixture] --> [estatio-\ndom]
+
+    [estatio-\ncanonicalfactory] -up-> [estatio-\ncanonical]
+    [estatio-\ncanonicalfactory] --> [estatio-\ndom]
+
+    package "udo-modules" {
+        [udo-\nbase]
+        [udo-\ncharge]
+
+        [udo-\ncharge] --> [udo-\ntax]
+
+        [icm-\ncommunication]
+
+        [udo-\ncurrency] --> [udo-\nbase]
+        [udo-\nindex] --> [udo-\nbase]
+        [udo-\nlink] --> [udo-\nbase]
+        [udo-\nnumerator] --> [udo-\nbase]
+        [udo-\ntax] --> [udo-\nbase]
+        [udo-\nevent] --> [udo-\nbase]
+        [udo-\nsettings] --> [udo-\nbase]
+        [udo-\nproject] --> [udo-\ncurrency]
+        [udo-\nproject] --> [udo-\npartyagreement]
+
+        [udo-\npartyagreement] --> [udo-\nnumerator]
+        [udo-\npartyagreement] --> [icm-\ncommunication]
+
+        [icm-\ncommunication] --> [udo-\nbase]
+    }
+
+    [estatio-\ndom] --> [udo-\nproject]
+    [estatio-\ndom] --> [udo-\ncharge]
+    [estatio-\ndom] --> [udo-\ncurrency]
+    [estatio-\ndom] --> [udo-\nindex]
+    [estatio-\ndom] --> [udo-\nlink]
+    [estatio-\ndom] --> [udo-\npartyagreement]
+    [estatio-\ndom] --> [udo-\nevent]
+    [estatio-\ndom] --> [udo-\nsettings]
+
+}
+
+
+package "incode-modules" {
+    [icm-\nbase]
+    [icm-\ndocuments] --> [icm-\nbase]
+    [icm-\nclassification] --> [icm-\nbase]
+    [icm-\ncountry] --> [icm-\nbase]
+}
+
+
+[estatio-\ndom] --> [icm-\ndocuments]
+[estatio-\ndom] --> [icm-\nclassification]
+
+[udo-\nbase] --> [icm-\nbase]
+
+
+[icm-\ncommunication] --> [icm-\ncountry]
+[icm-\ncommunication] --> [icm-\nbase]
+
+
+[estatio-\nfixture] -right-> IsisAddonsModules
+....
+
+Note that `icm-communication` currently resides in `github/estatio`, but the intention is to move it into `incode-modules`.  
+The story (EST-866) is currently blocked because of refactoring that is required to generalize the concept of application tenancy paths (so that a given object might resolve to one or more application tenancies).
+
+
+=== Incode Modules / IsisAddons
+
+The modules that make up Incode Catalog and the Isis Addons can be found https://raw.githubusercontent.com/incodehq/developers-guide/master/src/main/asciidoc/images/incode-and-isisaddons.png[in this diagram^], rendered from the following PlantUML source (via asciidoctor-diagram):
+
+[plantuml, {_imagesdir}/incode-and-isisaddons, png]
+....
+package "incode-modules" {
+
+    [icm-\nbase]
+    [icm-\ncountry]
+
+    package "attachments" {
+        [icm-\ndocument] --> [icm-\nbase]
+        [icm-\nclassification]
+    }
+
+    package "docrendering" {
+        [icm-\ndocrendering\n-freemarker] --> [icm-\ndocument]
+        [icm-\ndocrendering\n-stringinterpolator] --> [icm-\ndocument]
+        [icm-\ndocrendering\n-xdocreport] --> [icm-\ndocument]
+    }
+
+}
+
+
+package "isisaddons-modules" {
+
+    package "utilities" {
+        [iam-\npdfbox]
+        [iam-\nexcel]
+        [iam-\npoly]
+        [iam-\nsettings]
+        [iam-\nfakedata]
+        package "renderers" {
+            [iam-\nfreemarker]
+            [iam-\nstringinterpolator]
+            [iam-\nxdocreport]
+        }
+    }
+
+    package "cross cutting" {
+        [iam-\naudit]
+        [iam-\nsecurity]
+        [iam-\nsessionlogger]
+        [iam-\ncommand]
+        [iam-\npublishmq]
+        [iam-\nquartz]
+    }
+
+}
+
+[icm-\ndocrendering\n-freemarker] --> [iam-\nfreemarker]
+[icm-\ndocrendering\n-stringinterpolator] --> [iam-\nstringinterpolator]
+[icm-\ndocrendering\n-xdocreport] --> [iam-\nxdocreport]
+....
+
+
+Incode Modules not currently used in Estatio are: 
+
+* `icm-notes` (instead we have `udo-events`)
+* `icm-alias` (still to be integrated)
+* `icm-commchannel` (instead we have `icm-communications`).
+
+Isis Addons packages not currently used in Estatio are: 
+
+* `iam-docx` (instead we use SQL Server Reporting Services)
+* `iam-xdocreport` (instead we use SQL Server Reporting Services)
+* `iam-publishing`(instead we use `iam-publishmq`)
+* `iam-servletapi` (not required)
+* `iam-tags` (instead we have the "lease.brands" package of `estatio-dom`)
+* `iam-togglz`(not required)
+
+

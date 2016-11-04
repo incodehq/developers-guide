@@ -1,0 +1,67 @@
+[appendix]
+[[_design-coding-standards]]
+== Design/Coding Standards
+
+
+=== Code
+
+Include:
+
+* separate out menu from repository, with the menus in `estatio-app`
+* use `@MemberOrder` to associate actions with properties or collections
+* use `.layout.xml` for other layouts.
+** each layout should have a General/Application level/Metadata tab
+* use mixins rather than contribution services
+* follow conventional prefixes for action names, to automatically pick up CSS icons (hard-coded in `EstatioAppManifest`, search for "isis.reflector.facet.cssClassFa.patterns")
+* don't have actions called "change" or "edit"; search instead for the deeper business rule
+* use `XxxType.Meta` to gather together constants for datatypes (eg names, codes, descriptions etc).
+* use actions vs property edits appropriately
+** actions used for business modifications with side-effects
+** simple property edits used when no side-effects?
+* test repository queries using integration tests (not unit tests)
+* are typesafe queries used rather than JDOQL?
+* Remove deprecated features
+** replace deprecated Apache Isis annotations and domain services
+** have any `injectXxx()` and `setXxx()` been replaced by `@Inject`
+** has AssertJ been used rather than Hamcrest
+** replace JDOQL with typesafe queries
+
+
+(There are undoubtedly many more, just not yet documented...)
+
+
+
+=== Commit message format
+
+Use the format:
+
+[source,]
+----
+EST-xxxx: fixes the yada yada yada
+----
+
+that is, specifying the Jira issue number, and then a description of the change in the _present_ tense.
+
+[TIP]
+====
+The idea of using present tense is that the commit history, when read back, can be read as: "this patch, if it is applied... "
+====
+
+For example: 
+
+* `EST-864: fixes bad reference to country-dom (was -SNAPSHOT, should be 1.13.0)`
+* `EST-863 and EST-865: moves base and documentation module out to incode.`
+* `EST-861: removes EstatioUserRole, with functionality moved to EstatioRole`
+
+
+
+
+
+=== Editing Asciidoc
+
+Some guidance on writing Asciidoc (this list will likely grow in the future):
+
+* Start each sentence in a paragraph on a new line. +
++
+This makes it easy to spot too-long sentences, and sentences that are repetitive. +
+It also makes it easy to apply pull requests to documentation.

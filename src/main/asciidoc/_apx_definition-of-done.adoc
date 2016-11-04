@@ -1,0 +1,54 @@
+[appendix]
+[[_definition-of-done]]
+== Story checklists ("definition of done")
+
+[TIP]
+====
+We'll extend/refine these checklists in future; probably having different types of checklists for different types of stories.
+====
+
+=== Before you start
+
+Use the following checklist to identify the tasks that might need to be done in order to complete a story:
+
+* Scoping
+** which code module(s) are impacted
+*** will code in >1 module be updated?
+*** will new modules be created?
+** will their be any database schema changes
+*** and if so, have any database views been impacted?
+** will there be any data migation?
+** is this a new feature, or modifying an existing feature
+** can this story be split?
+
+* Control / Risk Management
+** how high is the overall risk?
+*** new feature vs bug fix vs ...
+** how will a feedback loop (typically be the business) be established
+** can deployment be decoupled from release ("dark release")?
+** how recover in case of issue when deployed
+
+
+* QA
+** what sort of automated tests are required to validate the work?
+** what sort of supporting documentation is required (over and above the code)?
+
+
+=== Once you're done (implementation review)
+
+Use the following checklist to identify whether the work is complete:
+
+* Does the implementation follow xref:_design-coding-standards[design/coding standards] ?
+
+* Testing
+** fixtures
+** unit tests
+** integration tests
+
+* Documentation
+** `README.adoc` for the module updated (if required)
+** any incremental documentation (eg user guide) updated ?
+
+
+
+
