@@ -2,34 +2,64 @@
 [[_design-coding-standards]]
 == Design/Coding Standards
 
+
+
+=== Code/Implementation
+
+[NOTE]
+----
 TODO: include content of https://incodehq.atlassian.net/wiki/display/EST/Incode+Coding+Convention+Convention
+... and there are probably several more
+----
 
 
-=== Code
-
-Include:
+=== Architecture/Layering
 
 * separate out menu from repository, with the menus in `estatio-app`
+
+=== Class Responsibilities
+
+* use mixins rather than contribution services
+* use actions vs property edits appropriately
+** don't have actions called "change" or "edit"; search instead for the deeper business rule
+** actions used for business modifications with side-effects
+** simple property edits used when no side-effects?
+* use `XxxType.Meta` to gather together constants for datatypes (eg names, codes, descriptions etc).
+
+[NOTE]
+----
+??? should we deprecate regular actions and use mixins everywhere ???
+----
+
+=== Entities
+
+* Do specify `@Persistent(schema=..., table=...)
+** schema will probably be `dbo`, unless only connected using polymorphic association (table of two halves) pattern
+* Do specify `@DomainObject(objectType="...")`
+** for new entities, use "schema.table" as the value
+* If in an inheritance hierarchy `@Discrimininator("...")
+** for new entities, use "schema.table" as the value
+
+=== Repositories
+
+* test repository queries using integration tests (not unit tests)
+* are typesafe queries used rather than JDOQL?
+
+=== Layout/Cosmetics
+
 * use `@MemberOrder` to associate actions with properties or collections
 * use `.layout.xml` for other layouts.
 ** each layout should have a General/Application level/Metadata tab
-* use mixins rather than contribution services
 * follow conventional prefixes for action names, to automatically pick up CSS icons (hard-coded in `EstatioAppManifest`, search for "isis.reflector.facet.cssClassFa.patterns")
-* don't have actions called "change" or "edit"; search instead for the deeper business rule
-* use `XxxType.Meta` to gather together constants for datatypes (eg names, codes, descriptions etc).
-* use actions vs property edits appropriately
-** actions used for business modifications with side-effects
-** simple property edits used when no side-effects?
-* test repository queries using integration tests (not unit tests)
-* are typesafe queries used rather than JDOQL?
-* Remove deprecated features
+
+=== Remove Deprecated Features
+
 ** replace deprecated Apache Isis annotations and domain services
 ** have any `injectXxx()` and `setXxx()` been replaced by `@Inject`
 ** has AssertJ been used rather than Hamcrest
 ** replace JDOQL with typesafe queries
 
 
-(There are undoubtedly many more, just not yet documented...)
 
 
 
