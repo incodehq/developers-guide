@@ -1,13 +1,13 @@
 [appendix]
-[[_definition-of-done]]
-== Story checklists ("definition of done")
+[[_apx_definition-of-done]]
+= Story checklists ("definition of done")
 
 [TIP]
 ====
 We'll extend/refine these checklists in future; probably having different types of checklists for different types of stories.
 ====
 
-=== Before you start
+== Before you start
 
 Use the following checklist to identify the tasks that might need to be done in order to complete a story:
 
@@ -34,7 +34,7 @@ Use the following checklist to identify the tasks that might need to be done in 
 ** what sort of supporting documentation is required (over and above the code)?
 
 
-=== Once you're done (implementation review)
+== Once you're done (implementation review)
 
 Use the following checklist to identify whether the work is complete:
 

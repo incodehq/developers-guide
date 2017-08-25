@@ -1,6 +1,6 @@
 [appendix]
-[[_building-this-guide]]
-== Building this guide
+[[_apx_building-this-guide]]
+= Building this guide
 
 :_imagesdir: images/
 

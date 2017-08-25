@@ -1,9 +1,9 @@
-== Preserving the Architectural Integrity
+[[_preserving-the-architectural-integrity]]
+= Preserving the Architectural Integrity
 :_imagesdir: images/
 
-aka "Cheese Moving" :-)
 
-=== Modules (As-is vs To-be)
+== Modules (As-is vs To-be)
 
 The UML component diagrams above represent the "as is" case, but this remains work-in-progress.
 Longer term "cheese moving" goals:
@@ -29,7 +29,7 @@ In terms of how this impacts database schemas, the approach we've gone for is:
 * use explicit (Apache Isis) `@DomainObject#objectType` and (DataNucleus) `@Discriminator` to ensure backward compatibility with persisted data
 
 
-=== Keeping tests closer to code.
+== Keeping tests closer to code.
 
 We also want to reorganize `dom` vs `fixture` vs `integtests`.
 Rather than have separate modules for each (resulting in all the integration tests lumped together), we instead want to group these by module so far as possible.
@@ -80,7 +80,7 @@ we instead want to evolve to:
 where most of the integration tests reside with the module, but the `estatio-app` module contains any "left over" the fixtures and integration tests for the entire application.
 
 
-=== Reducing Maven Boilerplate
+== Reducing Maven Boilerplate
 
 Note also that the above refactorings could result in more boilerplate/repetition within the poms.
 That's because at the moment we have all the stuff relevant to integration tests in a single module, whereas having multiple integration test modules will obviously introduce more boilerplate.

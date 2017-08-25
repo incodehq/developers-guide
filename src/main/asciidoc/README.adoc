@@ -1,3 +1,4 @@
+[[README]]
 = Incode Developers' Guide
 :_imagesdir: images/
 
@@ -16,7 +17,9 @@ include::_preserving-the-architectural-integrity.adoc[]
 
 include::_apx_definition-of-done.adoc[]
 
-include::_apx_design-coding-standards.adoc[]
+include::_apx_design-standards.adoc[]
+
+include::_apx_coding-standards.adoc[]
 
 include::_apx_development-environment.adoc[]
 

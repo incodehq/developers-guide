@@ -1,4 +1,5 @@
-== Development Process
+[[_development-process]]
+= Development Process
 
 
 [quote,Voltaire]
@@ -7,7 +8,7 @@ Don't let perfect be the enemy of good
 ____
 
 
-=== Kanban Boards
+== Kanban Boards
 
 We maintain a (private) JIRA with two Kanban boards:
 
@@ -18,7 +19,7 @@ We maintain a (private) JIRA with two Kanban boards:
 Periodically stories are moved from the "Backlog" board to the "Daily Standup" board.
 
 
-=== User stories have value (epics)
+== User stories have value (epics)
 
 All stories should provide some sort of value to the business; thus their value can be compared and the stories prioritized accordingly.
 The corollary is that all stories must be _meaningful_ to the business in one way or another.
@@ -28,7 +29,7 @@ Many (perhaps most) stories will be associated with an *epic*, in which case it 
 We use the `ECP` Jira project for all epics.
 
 
-=== Projects vs Products
+== Projects vs Products
 
 We use Jira Projects to keep track of software products:
 
@@ -49,7 +50,7 @@ TODO: we need to create additional Jira projects for Nuxeo, Docker etc. etc.
 
 
 
-=== Story lifecycle
+== Story lifecycle
 
 (As its name suggests) the "Daily Stand-up" board is reviewed daily, and helps the team synchronize on work.
 For example, a story may need reviewing, in which case this can be flagged, or it may be blocked, awaiting input.

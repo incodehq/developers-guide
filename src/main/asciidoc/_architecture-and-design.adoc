@@ -1,4 +1,5 @@
-== Architecture and Design
+[[_architecture-and-design]]
+= Architecture and Design
 
 :_imagesdir: images/
 
@@ -40,7 +41,7 @@ This brings in ECP-specific integration with CMS, General Ledger etc using Camel
 
 
 
-=== Estatio (ECP) Modules
+== Estatio (ECP) Modules
 
 (As noted above), Estatio (as deployed as ECP) consists of http://github.com/estatio/estatio[Estatio (open source)] along with a private repo (hosted in bitbucket) containing ECP-specific integration with CMS, General Ledger and stuff.
 
@@ -88,7 +89,7 @@ package "github/estatio" {
 ....
 
 
-=== Estatio (Open Source) Modules
+== Estatio (Open Source) Modules
 
 The modules that currently make up Estatio can be found https://raw.githubusercontent.com/incodehq/developers-guide/master/src/main/asciidoc/images/estatio-and-modules.png[in this diagram^], rendered from the following PlantUML source (via asciidoctor-diagram):
 
@@ -168,7 +169,7 @@ Note that `icm-communication` currently resides in `github/estatio`, but the int
 The story (EST-866) is currently blocked because of refactoring that is required to generalize the concept of application tenancy paths (so that a given object might resolve to one or more application tenancies).
 
 
-=== Incode Modules / IsisAddons
+== Incode Modules / IsisAddons
 
 The modules that make up Incode Catalog and the Isis Addons can be found https://raw.githubusercontent.com/incodehq/developers-guide/master/src/main/asciidoc/images/incode-and-isisaddons.png[in this diagram^], rendered from the following PlantUML source (via asciidoctor-diagram):
 

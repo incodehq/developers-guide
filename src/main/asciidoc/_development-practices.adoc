@@ -1,4 +1,5 @@
-== Development Practices
+[[_development-practices]]
+= Development Practices
 
 :_imagesdir: images/
 
@@ -8,7 +9,7 @@
 
 
 
-=== Working on multiple modules
+== Working on multiple modules
 
 (As discussed above), Estatio consists of multiple modules:
 
@@ -82,14 +83,14 @@ If you make a mistake or need to revert, then you'll need to:
 
 
 
-=== Deploying to Dev or Test servers.
+== Deploying to Dev or Test servers.
 
 In the `estatio-ecp` repo the `deploy-tomcat8.sh` script can be used to deploy.  
 See the `README` in the private ECP repository for more info.
 
 
 
-==== Testing email
+=== Testing email
 
 We use a custom version of `EmailService` that allows the email address(es) that the email is being sent to be overridden using configuration properties.
 

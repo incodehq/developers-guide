@@ -1,20 +1,20 @@
 [appendix]
-[[_development-environment]]
+[[_apx_development-environment]]
 = Development Environment
 
 :_imagesdir: images/
 
-=== IDE
+== IDE
 
 We use IntelliJ; see the http://isis.apache.org/guides/dg.html#_dg_ide_intellij[Apache Isis docs].
 
 
-=== git
+== git
 
 Check out the http://github.com/estatio/estatio[Estatio Open Source] version and also the ECP private version (from bitbucket).
 
 
-=== repo and foreach scripts
+== repo and foreach scripts
 
 Use this https://gist.github.com/danhaywood/21b5b885433fd8bc440da3fab88c91cb[gist] to provide the `repo` and `foreach` bash functions, along with the https://gist.github.com/danhaywood/938f0f751f756b1cfd6a9751b8779407[_repos.txt] config file listing the location of all repositories.
 
@@ -31,7 +31,7 @@ to switch to the first directory with "est" in its filename (all other matches a
 where the `-g` flag does a grep for matching repos of the argument ("isis-module" in the example above).
 
 
-=== AsciiDoc documentation
+== AsciiDoc documentation
 
 We use Asciidoc for our documentation (such as it is).
 These reside in `adocs/documentation` directory, along with this README, of course.
