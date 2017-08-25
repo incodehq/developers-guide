@@ -24,12 +24,33 @@ TODO: include content of https://incodehq.atlassian.net/wiki/display/EST/Incode+
 ** for new entities, use "schema.table" as the value
 * If in an inheritance hierarchy `@Discrimininator("...")
 ** for new entities, use "schema.table" as the value
+* Do specify `@XmlJavaTypeAdapter(PersistentEntityAdapter.class)`
 
 
-* for injected services, use: `@NotPersistable @Inject` +
+* for injected services, use: +
++
+[source,java]
+----
+@Inject
+@NotPersistable
+SomeService someService;
+----
 +
 The `@NotPersistable` means that the field isn't part of the QXxx entity, thus simplify the writing of type-safe queries.
 
+
+== View Models (JAXB)
+
+* for injected services, use: +
++
+[source,java]
+----
+@Inject
+@XmlTransient
+@Getter(AccessLevel.NONE)
+@Setter(AccessLevel.NONE) +
+SomeService someService;
+----
 
 
 == Repositories
