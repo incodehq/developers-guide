@@ -25,6 +25,13 @@ TODO: include content of https://incodehq.atlassian.net/wiki/display/EST/Incode+
 * If in an inheritance hierarchy `@Discrimininator("...")
 ** for new entities, use "schema.table" as the value
 
+
+* for injected services, use: `@NotPersistable @Inject` +
++
+The `@NotPersistable` means that the field isn't part of the QXxx entity, thus simplify the writing of type-safe queries.
+
+
+
 == Repositories
 
 * test repository queries using integration tests (not unit tests)
