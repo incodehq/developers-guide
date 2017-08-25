@@ -58,9 +58,36 @@ SomeService someService;
 * test repository queries using integration tests (not unit tests)
 * are typesafe queries used rather than JDOQL?
 
-== Behaviour
 
-* mixins... see EST-1559
+
+== Mixins
+
+(per EST-1559)
+
+Six reasons for mixins:
+
+1. decoupling across domain modules .. ie contribute behaviour to dependent.  eg Party_invoicesFrom
+
+2. decoupling across layers ... ie allow app layer functionality be accessible from domain layer; eg. Property_fixDisplayOrder
+
+3. reuse of behaviour in mixin's inheritance hierarchy.  For example, DomainObject_triggerAbstract.
+
+4. for separation of concerns, a la DCI.  Thus helper methods live on the mixin rather than on the underlying entity, and only inject services into the mixin as required.
+
+5. Less error prone?  Standardisation of "act", "prop" or "coll" as method names, with the member's name being derived from mixin class.
+
+6. Lets cross-cutting functionality that might apply to several different classes be brought together, even though it isn't necessarily decoupled from all of those classes.  For example, "_sync".
+
+~~~
+For the Estatio codebase, I think the prevailing sentiment is:
+
+- (1) is fine as a reason to use mixins
+- (2) ... ok ?
+- (3) .. case-by-case; depends on how much functionality is in the superclass
+- (4) ... no
+- (5) ... no
+- (6) ... ok ?
+
 
 
 == Layout/Cosmetics
