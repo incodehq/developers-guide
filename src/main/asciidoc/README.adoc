@@ -4,24 +4,24 @@
 
 This guide is intended for the developers of Estatio (and other applications).
 
-Details as to how to build this guide (as HTML or PDF) can be found in this xref:_building-this-guide[appendix].
+Details as to how to build this guide (as HTML or PDF) can be found in this xref:_apx_building-this-guide[appendix].
 
 
-include::_development-process.adoc[]
+include::_development-process.adoc[leveloffset=+1]
 
-include::_architecture-and-design.adoc[]
+include::_architecture-and-design.adoc[leveloffset=+1]
 
-include::_development-practices.adoc[]
+include::_development-practices.adoc[leveloffset=+1]
 
-include::_preserving-the-architectural-integrity.adoc[]
+include::_preserving-the-architectural-integrity.adoc[leveloffset=+1]
 
-include::_apx_definition-of-done.adoc[]
+include::_apx_definition-of-done.adoc[leveloffset=+1]
 
-include::_apx_design-standards.adoc[]
+include::_apx_design-standards.adoc[leveloffset=+1]
 
-include::_apx_coding-standards.adoc[]
+include::_apx_coding-standards.adoc[leveloffset=+1]
 
-include::_apx_development-environment.adoc[]
+include::_apx_development-environment.adoc[leveloffset=+1]
 
-include::_apx_building-this-guide.adoc[]
+include::_apx_building-this-guide.adoc[leveloffset=+1]
 
